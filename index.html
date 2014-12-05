@@ -139,654 +139,204 @@ class: center, middle
 
 # Oder: Wie wird meine Firma agiler und besser als die Konkurrenz?
 
---- 
+---
 
 # Agenda
 
-1. Wer bin ich und warum ist Raid wichtig?
-2. Allgemeine Definition
-3. Raid Typen
-4. Einsatzzweck
-5. Implementierung
+1. Aufbau IT-Firma
+3. Probleme (nicht vorhandene CI)
+4. Lösungsansätze
+5. Puppet
 6. Fazit
 
 ---
 
 class: middle, center
 
-# Wer bin ich und warum ist Raid wichtig?
+## Aufbau einer klassischen IT-Firma
 
 ---
 
 .left-column[
-## Wer bin ich und warum ist Raid wichtig?
+## Aufbau
 ]
 .right-column[
-* Tests / Statistiken von über > 500.000 HDDs/SSDs erstellt
+* Unwichtige Abteilungen (Controlling, HR)
 
-* Aufbau großer Setups mit viel Speicher (>2PB)
+* Dev Team
 
-* Aufbau großer Setups mit vieeeeeeeeel IO Bedarf
+* Ops Team
 
-* Erkenntnis 1: Datenträger gehen andauernd kaputt
+]
 
-* Erkenntnis 2: Datenträger können nicht schnell genug sein
+---
+.left-column[
+## Aufbau
+### - Dev
+]
+.right-column[
+Aufgaben:
 
-* Zwangsweise mit Raid beschäftigt
+* Weiterentwicklung der Produkte
+
+* möglichst oft möglichst viele neue Features
+
+* Bugs fixen im legacy Code
+
+]
+
+---
+
+.left-column[
+## Aufbau
+### - Dev
+### - Ops
+]
+.right-column[
+Aufgaben:
+
+* Einmalige Entwicklung der Infrastruktur für hauseigene Produkte
+
+* Regelmäßige Sicherheitsupdates
+
+* Nach Möglichkeit keine Featureupdates
+
 ]
 
 ---
 
 class: middle, center
 
-# Allgemeine Definition
+## Probleme im Alltag
 
 ---
+
 .left-column[
-## Allgemeine Definition
+## Probleme
+### - DevOps
 ]
 .right-column[
-* Redundant Array of Independent Disks
+* klassische Dev Abteilung arbeitet gegen Ops
 
-* Redundant Array of Inexpensive Disks
+* Ops Infrastruktur ist nicht für Produktupdates ausgelegt
 
-* Logischer Zusammenschluss für mehr Leistung und Ausfallsicherheit
+* Keine festen Regeln für das Einspielen von Produktupdates
 
-* Daten werden in Chunks/Stripes aufgeteilt
+* Keine Automatisierung => Viele Fehlerquellen
 
-* Standard Chunk size von 64kB
+* Wie macht man Produktupdates rückgängig?
 
-* Größere Datein => größere Chunks
 ]
 
 ---
+
 .left-column[
-## Allgemeine Definition
-### - Striping
+## Probleme
+### - DevOps
+### - Konkurrenz
 ]
 .right-column[
-* Nutzbarer Speicher [Kapazität der kleinsten Disk] * N
+Konkurrenz updated Sonntag Nacht um 3Uhr ihr Produkt
 
-* N > 1
+* Ops soll "mal eben" live Code ändern?
 
-* Chunks werden gleichmäßig auf alle Datenträger verteilt
+* Hektisch Dev wachklingeln, Code ändern, Dev nimmt live?
 
-* Schreiben/Lesen kann parallel auf allen Datenträgern erfolgen
+* Alle wachklingeln?
 
-* Alle Daten verloren beim Ausfall eines Datenträgers
+* Einfach mal nix machen
 
-* Eigentlich gar kein Raid weil !Redundant
-]
-
----
-.left-column[
-## Allgemeine Definition
-### - Striping
-]
-.right-column[
-![Right-aligned image](raid0.svg)
 ]
 
 ---
 
-.left-column[
-## Allgemeine Definition
-### - Striping
-### - Mirroring
-]
-.right-column[
-* Nutzbarer Speicher [Kapazität der kleinsten Disk]
+class: middle, center
 
-* N > 1
-
-* Ein Chunk wird auf allen Disks gespeichert
-
-* Lesen kann parallel auf allen Datenträgern erfolgen
-
-* Das ist Raid :)
-]
+## Lösungen - Welche Ansätze gibt es und was ist zu beachten?
 
 ---
 
 .left-column[
-## Allgemeine Definition
-### - Striping
-### - Mirroring
-]
-.right-column[
-![Right-aligned image](raid1.svg)
-]
-
----
-
-.left-column[
-## Allgemeine Definition
-### - Striping
-### - Mirroring
-### - Parity
-]
-.right-column[
-* Nutzbarer Speicher [Kapazität der kleinsten Disk] * (N-1)
-
-* N > 2
-
-* Parallels Schreiben von N-1 Chunks (Paritychunk wird danach geschrieben)
-
-* Paritychunk = XOR(N-1 Chunks)
-
-* Lesen/Schreiben parallel auf allen Datenträgern
-
-* Das ist auch noch Raid :)
-]
-
----
-
-.left-column[
-## Allgemeine Definition
-### - Striping
-### - Mirroring
-### - Parity
-]
-.right-column[
-Update eines Chunks:
-
-* Lesen des Chunks
-
-* Vergleich ob neuer Chunk != alter Chunk
-
-* Lesen des Parity Chunks
-
-* neuer Paritychunk = XOR(alter Chunk + neuer Chunk + Parity Chunk)
-
-* Schreiben vom neuen Chunk + neuer Paritychunk
-]
-
----
-
-.left-column[
-## Allgemeine Definition
-### - Striping
-### - Mirroring
-### - Parity
-]
-.right-column[
-![right-aligned image](raid4.svg)
-]
-
----
-
-.left-column[
-## Allgemeine Definition
-### - Striping
-### - Mirroring
-### - Parity
-]
-.right-column[
-![right-aligned image](raid5.svg)
-]
-
----
-
-.left-column[
-## Allgemeine Definition
-### - Striping
-### - Mirroring
-### - Parity
-]
-.right-column[
-![Right-aligned image](raid6.svg)
-]
-
----
-
-.left-column[
-## Einsatzzweck
-]
-.right-column-center[
-## Ideen?
-]
- 
----
-
-.left-column[
-## Einsatzzweck Raidlevel
-### - Raid 0
-]
-.right-column[
-Vorteile:
-
-* Hohe Schreib/Leseleistung
-
-Nachteile:
-
-* Kein Schutz vor Hardwaredefekten
-
-Einsatzzweck:
-
-* Speichern von OS/Spiele im Heimbereich
-]
-
----
-
-.left-column[
-## Einsatzzweck Raidlevel
-### - Raid 0
-### - Raid 1
-]
-.right-column[
-Vorteile:
-
-* Hohe Leseleistung
-
-* N-1 Disks können ausfallen ohne Datenverlust
-
-Nachteile:
-
-* Große Differenz zwischen Netto/Brutto Kapazität
-
-Einsatzzweck:
-
-* OS Installation im Server/Workstation Bereich
-
-* Datenspeicher in Servern mit geringen Schreibanforderungen
-]
-
----
-
-.left-column[
-## Einsatzzweck Raidlevel
-### - Raid 0
-### - Raid 1
-### - Raid 4
-]
-.right-column[
-Vorteile:
-
-* erhöhte Schreib/Leseleistung
-
-* Eine Disk kann ausfallen ohne Datenverlust
-
-Nachteile:
-
-* Parity Berechnung kostet Rechenleistung
-
-* Ausfall Parity Disk => Neuberechnung Parity Chunks
-
-* Starke Belastung aller verbliebenen Disks bei Rebuild
-
-Einsatzzweck:
-
-* Hohe Belastung beim Ausfall der Parity Disk => Garnicht
-]
-
----
-
-.left-column[
-## Einsatzzweck Raidlevel
-### - Raid 0
-### - Raid 1
-### - Raid 4
-### - Raid 5
-]
-.right-column[
-Vorteile:
-
-* erhöhte Schreib/Leseleistung
-
-* Eine Disk kann ausfallen ohne Datenverlust
-
-Nachteile:
-
-* Parity Berechnung kostet Rechenleistung
-
-* Hohe Belastung aller verbliebenen Disks bei Rebuild
-
-Einsatzzweck:
-
-* Große Datenspeicher bis ~10TB mit geringen Random IO Anforderungen
-]
-
----
-
-.left-column[
-## Einsatzzweck Raidlevel
-### - Raid 0
-### - Raid 1
-### - Raid 4
-### - Raid 5
-### - Raid 6
-]
-.right-column[
-Vorteile:
-
-* erhöhte Schreib/Leseleistung
-
-* Zwei Disks können ausfallen ohne Datenverlust
-
-Nachteile:
-
-* Parity Berechnung kostet Rechenleistung
-
-* Hohe Belastung aller verbliebenen Disks bei Rebuild
-
-Einsatzzweck:
-
-* Große Datenspeicher bis ~19TB mit geringen Random IO Anforderungen
-]
-
----
-
-.left-column[
-## Einsatzzweck Raidkombis
-]
-.right-column-center[
-## Was kann man wohl wie kombinieren?
-]
-
----
-
-.left-column[
-## Einsatzzweck Raidkombis
-### - Raid 10
-]
-.right-column[
-![right-aligned image](raid10.svg)
-]
-
----
-
-.left-column[
-## Einsatzzweck Raidkombis
-### - Raid 10
-]
-.right-column[
-Vorteile:
-
-* Hohe Schreib/Leseleistung
-
-* Gute Skalierbarkeit
-
-* Ausfall mehrerer Disks möglich
-
-* Geringe Rebuildbelastung
-
-* Sehr gute Random IO Leistung
-
-Nachteile:
-
-* Hoher Brutto/Netto Unterschied
-
-Einsatzzweck:
-
-* Virtualisierung
-
-* Datenbanken
-
-* Alles mit viel Random IO
-]
-
----
-
-.left-column[
-## Einsatzzweck Raidkombis
-### - Raid 10
-### - Rest
+## Lösungen
+### - Oldschool
 ]
 .right-column[
 
-* Raid 01
+* Komische Perl Skripte
 
-* Raid 50
+* Komische Python Skripte
 
-* Raid 51
+* Komische Bash Skripte
 
-* Raid 60
+* for-Schleifen
 
-* Raid 61
-]
-
----
-class: center, middle
-
-## Hardware (RoC/Fakeraid)
-
-## Software (mdadm/Dateisysteme)
-
----
-
-.left-column[
-## Hardware
-### - RoC
-]
-.right-column[
-![right-aligned image](lsi9271-4i.jpg)
 ]
 
 ---
 
 .left-column[
-## Hardware
-### - RoC
+## Lösungen
+### - Oldschool
 ]
 .right-column[
-## hier HBA foto einfügen
-]
+Anforderungen:
 
+* Ausgangszustand muss bekannt sein
 
----
+* Wiederaufnahme partieller &Auml;nderungen
 
-.left-column[
-## Hardware
-### - RoC
-### - Fakeraid
-]
-.right-column[
-* Raid Algorithmen gepsichert im Chipsatz(BiosRaid)
-
-* Raid Algorithmen gespeichert auf Zusatzkarte(FakeRaid)
-
-* Berechnungen übernimmt CPU, kein dedizierter Controller
+* Rollback
 ]
 
 ---
-
-.left-column[
-## Software
-### - mdadm
-]
-.right-column[
-* Raid Algorithmen im Linux Kernel
-
-* mdadm = **M**ultiple **D**isk **ADM**inistration
-
-* mdadm => Userlandtool zum ansprechen der Algorithmen
-
-* Verwaltung von X Blockdevices in einem Raidverbund
-]
-
----
-
-.left-column[
-## Software
-### - mdadm
-]
-.right-column[
-Vorteile:
-
-* Freie Implementierung der Algorithmen
-
-* Raids sind unabhängig von Controller/CPU
-
-Nachteile:
-
-* Geringere Performance zu RoC bei Raidkombinationen (nur im HPC Bereich)
-
-Einsatzzweck:
-
-* Jeder Linux Server/Workstation (außer HPC)
-]
-
----
-
-.left-column[
-## Software
-### - mdadm
-]
-.right-column[
 ```
-[root@bastelfreak-fs ~]# cat /proc/mdstat 
-Personalities : [raid1] [raid6] [raid5] [raid4] 
-md125 : active raid6 sda[4] sdd[7] sdi[8] sdg[2] sdf[3] 
-      sdh[1] sde[0] sdc[6] sdb[5]
-      20510945280 blocks super 1.2 level 6, 512k chunk, 
-      algorithm 2 [9/9] [UUUUUUUUU]
-      bitmap: 0/22 pages [0KB], 65536KB chunk
+#!/usr/bin/perl -w
+use strict;
 
-md126 : active raid1 sdj2[0] sdm2[3] sdl2[2] sdk2[1]
-      1049536 blocks super 1.0 [4/4] [UUUU]
-      bitmap: 1/1 pages [4KB], 65536KB chunk
+                                           $_='ev
+                                       al("seek\040D
+           ATA,0,                  0;");foreach(1..3)
+       {<DATA>;}my               @camel1hump;my$camel;
+  my$Camel  ;while(             <DATA>){$_=sprintf("%-6
+9s",$_);my@dromedary           1=split(//);if(defined($
+_=<DATA>)){@camel1hum        p=split(//);}while(@dromeda
+ ry1){my$camel1hump=0      ;my$CAMEL=3;if(defined($_=shif
+        t(@dromedary1    ))&&/\S/){$camel1hump+=1<<$CAMEL;}
+       $CAMEL--;if(d   efined($_=shift(@dromedary1))&&/\S/){
+      $camel1hump+=1  <<$CAMEL;}$CAMEL--;if(defined($_=shift(
+     @camel1hump))&&/\S/){$camel1hump+=1<<$CAMEL;}$CAMEL--;if(
+     defined($_=shift(@camel1hump))&&/\S/){$camel1hump+=1<<$CAME
+     L;;}$camel.=(split(//,"\040..m`{/J\047\134}L^7FX"))[$camel1h
+      ump];}$camel.="\n";}@camel1hump=split(/\n/,$camel);foreach(@
+      camel1hump){chomp;$Camel=$_;y/LJF7\173\175`\047/\061\062\063\
+      064\065\066\067\070/;y/12345678/JL7F\175\173\047`/;$_=reverse;
+       print"$_\040$Camel\n";}foreach(@camel1hump){chomp;$Camel=$_;y
+        /LJF7\173\175`\047/12345678/;y/12345678/JL7F\175\173\0 47`/;
+         $_=reverse;print"\040$_$Camel\n";}';;s/\s*//g;;eval;   eval
+           ("seek\040DATA,0,0;");undef$/;$_=<DATA>;s/\s*//g;(   );;s
+             ;^.*_;;;map{eval"print\"$_\"";}/.{4}/g; __DATA__   \124
+               \1   50\145\040\165\163\145\040\157\1 46\040\1  41\0
+                    40\143\141  \155\145\1 54\040\1   51\155\  141
+                    \147\145\0  40\151\156 \040\141    \163\16 3\
+                     157\143\   151\141\16  4\151\1     57\156
+                     \040\167  \151\164\1   50\040\      120\1
+                     45\162\   154\040\15    1\163\      040\14
+                     1\040\1   64\162\1      41\144       \145\
+                     155\14    1\162\       153\04        0\157
+                      \146\     040\11     7\047\         122\1
+                      45\15      1\154\1  54\171          \040
+                      \046\         012\101\16            3\16
+                      3\15           7\143\15             1\14
+                      1\16            4\145\163           \054
+                     \040            \111\156\14         3\056
+                    \040\         125\163\145\14         4\040\
+                    167\1        51\164\1  50\0         40\160\
+                  145\162                              \155\151
+                \163\163                                \151\1
+              57\156\056
 
-md127 : active raid1 sdj1[0] sdm1[3] sdl1[2] sdk1[1]
-      52510592 blocks super 1.2 [4/4] [UUUU]
-      bitmap: 1/1 pages [4KB], 65536KB chunk
+```
 
-unused devices: <none>
-[root@bastelfreak-fs ~]#```
-]
-
----
-
-.left-column[
-## Software
-### - mdadm
-### - ZFS
-]
-.right-column[
-Was ist das?
-
-* **Z**ettabyte **F**ile **S**ystem von Sun
-
-* Dateisystem inkl Volume Manager und Raid Support
-
-* Konzipiert für den Enterprise Einsatz (Backupstorage mit >2PB, riesige Virtualisierungscluster)
-
-* Funktioniert aber auch toll Zuhaus :)
-
-* Entwickelt auf FreeBSD und Solaris
-
-* Portierung auf Linux
-]
-
----
-
-.left-column[
-## Software
-### - mdadm
-### - ZFS
-]
-.right-column[
-Was kann ZFS als Dateisystem?
-
-* Maximale Dateigröße von 16EiB (2^60)
-
-* Maximale Dateisystemgröße 16EiB
-
-* Maximal 2^48 Datein
-
-* Transparente Komprimierung
-
-* Transparente Verschlüsselung
-
-* Dynamische Inodes
-
-* Checksumming (CRC32)
-
-* Scrubbing
-
-* Deduplication
-
-* Snapshots (CoW)
-]
-
----
-
-.left-column[
-## Software
-### - mdadm
-### - ZFS
-]
-.right-column[
-Was kann ZFS als Volume Manager?
-
-* Partial Rebuild
-
-* Send/Receive
-
-* Pools mit dynamischen Partitionsgrößen
-
-* Kein Write Hole bei Raid-Z1, Raid-Z2, Raid-Z3
-
-* ZIL - ZFS Intent Log Cache (Ram oder Blockdevice[s])
-
-* ARC - Adaptive Replacement Cache (Ram)
-
-* L2ARC - Layer 2 Adaptive Replacement Cache (Ram oder Blockdevice[s])
-]
-
----
-
-.left-column[
-## Software
-### - mdadm
-### - ZFS
-### - BTRFS
-]
-.right-column[
-Wie ZFS aber:
-
-* Native Linux Entwicklung
-
-* Keine eingebaute Verschlüsselung
-
-* Online Raid Level Migration
-
-* Unterschiedliche Raidlevel für Daten und Metadaten
-]
-
----
-
-.left-column[
-## Software
-### - mdadm
-### - ZFS
-### - BTRFS
-### - glusterfs
-
-]
-.right-column[
-
-]
----
-
-.left-column[
-## Software
-### - mdadm
-### - ZFS
-### - BTRFS
-### - glusterfs
-### - ceph
-]
-.right-column[
-
-]
-
----
-
-class: middle, center
-
-## Raid bietet mehr logischen Speicher, Ausfallsicherheit, gesteigerte IO Performance
-
-## Raid ersetzt keine Backups!
 
 			</textarea>
     <script src="remark-latest.min.js">
