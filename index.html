@@ -129,15 +129,15 @@
   <body>
     <textarea id="source">
 
-class: center, middle
+class: center, middle, inverse
 
-# Configuration und Lifecycle Management sowie Echtzeitorchestrierung und Continuous Integration in IT Firmen
+# Configuration und Lifecycle Management sowie Echtzeitorchestrierung und Continuous Integration in IT-Firmen
 
 ---
 
-class: center, middle
+class: center, middle, inverse
 
-# Oder: Wie wird meine Firma agiler und besser als die Konkurrenz?
+# Oder: Wie wird meine IT-Firma agiler und besser als die Konkurrenz?
 
 ---
 
@@ -151,7 +151,7 @@ class: center, middle
 
 ---
 
-class: middle, center
+class: middle, center, inverse
 
 ## Aufbau einer klassischen IT-Firma
 
@@ -205,7 +205,7 @@ Aufgaben:
 
 ---
 
-class: middle, center
+class: middle, center, inverse
 
 ## Probleme im Alltag
 
@@ -250,7 +250,7 @@ Konkurrenz updated Sonntag Nacht um 3Uhr ihr Produkt
 
 ---
 
-class: middle, center
+class: middle, center, inverse
 
 ## Lösungen - Welche Ansätze gibt es und was ist zu beachten?
 
@@ -258,7 +258,7 @@ class: middle, center
 
 .left-column[
 ## Lösungen
-### - Oldschool
+### - Ans&auml;tze
 ]
 .right-column[
 
@@ -276,21 +276,21 @@ class: middle, center
 
 .left-column[
 ## Lösungen
-### - Oldschool
+### - Anforderung
 ]
 .right-column[
-Anforderungen:
 
 * Ausgangszustand muss bekannt sein
 
 * Wiederaufnahme partieller &Auml;nderungen
 
 * Rollback
+
+* Fire and forget
 ]
 
 ---
-```
-#!/usr/bin/perl -w
+```perl
 use strict;
 
                                            $_='ev
@@ -336,7 +336,73 @@ _=<DATA>)){@camel1hum        p=split(//);}while(@dromeda
               57\156\056
 
 ```
+---
 
+class: middle, center, inverse
+
+## Puppet - Der heilige Grahl?
+
+---
+
+.left-column[
+## Puppet
+### - Features
+]
+.right-column[
+
+* Client/Server Software
+
+* DSL - Domain Specific Language
+
+* Software defined Infrastructure
+
+* DB Anbindung für Reports
+
+* Testumgebung -> Liveumgebung
+]
+
+---
+
+.left-column[
+## Puppet
+### - Features
+### - Ablauf
+]
+.right-column[
+### hier puppet run zeichnen
+]
+
+---
+
+.left-column[
+## Puppet
+### - Features
+### - Ablauf
+### - Fachbegriffe
+]
+.right-column[
+* Lifecycle Management = Kompletten Lebenszyklus seiner Hardware nachvollziehen
+
+* Configuration Management = Systeme zu 100% automatisiert einrichten und verwalten
+
+* Continuous Integration = Mehrere Entwickler arbeiten parallel in Testumgebung + Migration in Liveumgebung
+
+* Echtzeitorchestrierung = Ohne Zeitverz&ouml;gerung auf allen Systemen parallel arbeiten
+]
+
+---
+
+class: middle, center, inverse
+
+# Fazit
+
+## Automatisierung verhindert manuelle Fehler
+
+## Dev + Ops = DevOps = schnellerer + stabilerer Release von entwickelten Updates
+
+## Automatisierung kann ganz viel paralllel kaputt machen
+
+.footnote[&copy; Tim Meusel]
 
 			</textarea>
     <script src="remark-latest.min.js">
